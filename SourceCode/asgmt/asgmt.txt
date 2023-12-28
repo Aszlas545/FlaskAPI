@@ -1,0 +1,83 @@
+Overview
+
+The task in this assignment is to develop a web application storing data that can be used for a machine learning model.
+
+Data stored by the web application are a collection of data points that involve two or more continuous features and a single categorical feature.
+The exact names and the nature of the these features do not matter and can be chosen arbitrarily. The data are supposed to be used for a classification
+task performed by a machine learning model that uses the continuous features to predict the corresponding category. The web application stores the data
+in a relational database consisting of a single table that holds individual data points as records.
+
+In the basic version of the web application, data points can be retrieved from, added to, and deleted from the database. In the extended version of the
+web application, it is also possible to make predictions of the most likely category based on submitted values of the continuous features using a machine learning model.
+
+The web application consists of two parts: a website and an API. The website involves HTML pages to be rendered in a browser, which allow the user to
+view and manipulate the data, whereas the API involves data transfer directly over HTTP.
+
+Requirements for the maximum grade of 4
+
+Using a web framework (such as Flask, Django, FastAPI, etc.) and a database management system (such as SQLite, PostgreSQL, MySQL, MariaDB, etc.),
+implement the website part of the basic version of the web application described above. The web application should employ the database management
+system for managing a relational database that should consists of a single table with the following columns:
+
+    -one column for the primary key (with primary keys represented as integers);
+    -two or more columns for the continuous features (one column per each feature, with all features represented as floating-point numbers);
+    -one column for the categorical feature (with categories represented as integers).
+
+The website part should involve paths according to the following specification.
+        / - displays all data points in the database. The response should comprise an HTML page, which is considered the home page, that should contain a table
+    with all data points. The table should include at least a column with sequence numbers of consecutive rows (which need not be identical to the primary
+    keys of the corresponding records), one column for each continuous feature, and a column for the categorical feature. The HTML page should also contain
+    elements that allow the user to invoke deletion of a selected record via the /delete/<record_id> path (where <record_id> stands for the primary key of the record).
+        /add - adds a new data point to the database. The response should comprise an HTML page that contains a form for specifying a new data point to be
+    added to the database. The form should be submitted to the same path via the HTTP POST method. Upon submission, the submitted values should be validated
+    and if the validation succeeds, a new record with the submitted values should be added to the database and redirection to the home page should follow.
+    If the validation fails, a response incorporating the 400 HTTP status code and comprising an HTML page that shows a 400 error should be generated.
+        /delete/<record_id> (where <record_id> stands for the primary key of a record) - deletes a data point from the database. This path should only accept
+    requests via the HTTP POST method. The <record_id> should be validated to check if the database contains a record with a matching primary key and if
+    the validation succeeds, the corresponding record should be deleted from the database and redirection to the home page should follow. If the validation
+    fails, a response incorporating the 404 HTTP status code and comprising an HTML page that shows a 404 error should be generated.
+
+    Records in the database should be mapped to objects in the code. To this end, utilize object-relational mapping, using an appropriate package if needed
+    (such as SQLAlchemy, Peewee, Pony, etc.).
+
+    It is desirable for the HTML pages to support efficient navigation. For example, the home page may contain a navigation element with a link to the /add path,
+    whereas the HTML page that contains the form for specifying a new data point to be added to the database may contain a navigation element with a link to the home page.
+
+To improve the look of the HTML pages, custom styles can be adopted, but this aspect will not be graded.
+    Implement the API part of the basic version of the web application. It should involve endpoints according to the following specification.
+        GET /api/data - returns all data points in the database. The response should comprise a JSON that contains a list of dictionaries, each specifying an individual data point.
+        POST /api/data - adds a new data point to the database. The request should comprise a JSON that contains a dictionary specifying a new data point to be added to the database.
+    The submitted values should be validated and if the validation succeeds, a new record with the submitted values should be added to the database and a response comprising a JSON
+    that contains a dictionary specifying the primary key of the new record should follow. If the validation fails, a response incorporating the 400 HTTP status code and
+    comprising a JSON that contains a dictionary specifying a relevant error message (e.g., "Invalid data") should be generated.
+        DELETE /api/data/<record_id> (where <record_id> stands for the primary key of a record) - deletes a data point from the database. The <record_id> should be validated to check
+    if the database contains a record with a matching primary key and if the validation succeeds, the corresponding record should be deleted from the database and a response
+    comprising a JSON that contains a dictionary specifying the primary key of the deleted record should follow. If the validation fails, a response incorporating the 404
+    HTTP status code and comprising a JSON that contains a dictionary specifying a relevant error message (e.g., "Record not found") should be generated.
+
+    Similarly to the website part, utilize object-relational mapping for the API part.
+    For testing the API part, it is recommended to use the Requests package.
+
+
+Requirements for the maximum grade of 5
+
+All requirements for the maximum grade of 4 should be satisfied.
+Implement the website part of the extended version of the web application. It should involve a path according to the following specification.
+/predict - predicts a category based on continuous features. The response should comprise an HTML page that contains a form for specifying values of the
+continuous features. The form should be submitted to the same path via the HTTP POST method. Upon submission, the submitted values should be validated
+and if the validation succeeds, they should be fed to a machine learning model that should use them to predict the corresponding category.
+Once the prediction is made, another response comprising an HTML page that contains the predicted category should follow. If the validation fails,
+a response incorporating the 400 HTTP status code and comprising an HTML page that shows a 400 error should be generated.
+The machine learning model predicting the category based on the continuous features should be a k-nearest neighbors classifier. The exact value of the k parameter
+does not matter and can be chosen arbitrarily, but should not be larger than 5. The classifier should be trained on all data points in the database. Before training,
+each continuous feature should be standardized. Consequently, before being fed to the model, the submitted values should also be standardized accordingly.
+To implement the classifier and perform standardization, use the scikit-learn package.
+It is desirable for the HTML pages to support efficient navigation. For example, a navigation element with a link to the /predict path may be added to the home page,
+whereas the HTML page that contains the form for specifying values of the continuous features and the HTML page that contains the predicted category may
+contain a navigation element with a link to the home page.
+Implement the API part of the extended version of the web application. It should involve an endpoint according to the following specification.
+GET /api/predictions - predicts a category based on continuous features. The request should include query parameters (after the question mark)
+specifying values of the continuous features. The submitted values should be validated and if the validation succeeds, they should be fed to a
+machine learning model that should use them to predict the corresponding category. Once the prediction is made, a response comprising a
+JSON that contains a dictionary specifying the predicted category should follow. If the validation fails, a response incorporating the 400 HTTP
+status code and comprising a JSON that contains a dictionary specifying a relevant error message (e.g., "Invalid data") should be generated.
