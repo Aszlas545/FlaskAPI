@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Feature One</th>
+            <th>Feature Two</th>
+            <th>Strategic Feature</th>
+        </tr>
+        {% for obj in objects %}
+        <tr>
+            <td>{{ obj.id }}</td>
+            <td>{{ obj.feature_one }}</td>
+            <td>{{ obj.feature_two }}</td>
+            <td>{{ obj.feature_strat }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

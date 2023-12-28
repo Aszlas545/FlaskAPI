@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -19,21 +19,22 @@ class Object(db.Model):
 
 @app.route('/')
 def hello():
-    return "Hello, this is your Flask API!"
+    result = db.session.scalars(db.select(Object))
+    return render_template('home.html', objects=result)
 
 
-@app.route('/test')
-def get_data():
-    return "test"
+@app.route('/add')
+def add_data():
+    return "add"
+
+
+@app.route('/delete/<record_id>')
+def remove_data(record_id):
+    return "delete" + str(record_id)
 
 
 with app.app_context():
     db.create_all()
-
-with app.app_context():
-    obj = Object(feature_one=0.1, feature_two=1.1, feature_strat=5)
-    db.session.add(obj)
-    db.session.commit()
 
 if __name__ == '__main__':
     app.run(debug=True)
