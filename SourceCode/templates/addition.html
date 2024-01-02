@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+    <div>
+        <form action="/add" method="post">
+            <label for="feature_one">feature one:</label><input type="text" id="feature_one" name="feature_one">
+            <label for="feature_two">feature two:</label><input type="text" id="feature_two" name="feature_two">
+            <label for="feature_strat">strategic feature:</label><input type="text" id="feature_strat" name="feature_strat">
+            <button type="submit">Add</button>
+        </form>
+    </div>
+{% endblock %}

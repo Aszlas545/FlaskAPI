@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-    <table>
+    <div>
+        <form action="/add" method="get">
+            <button type="submit">Add</button>
+        </form>
+        <form class="main-form" action="/delete" method="post">
+            <label for="to_remove"></label><input type="text" id="to_remove" name="to_remove">
+            <button type="submit">Delete</button>
+        </form>
+    </div>
+    <table class="styled-table">
         <tr>
             <th>ID</th>
             <th>Feature One</th>
