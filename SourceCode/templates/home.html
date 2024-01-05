@@ -12,16 +12,20 @@
     <table class="styled-table">
         <tr>
             <th>ID</th>
-            <th>Feature One</th>
-            <th>Feature Two</th>
-            <th>Strategic Feature</th>
+            <th>sepal_length</th>
+            <th>sepal_width</th>
+            <th>petal_length</th>
+            <th>petal_width</th>
+            <th>flower_species</th>
         </tr>
         {% for obj in objects %}
         <tr>
             <td>{{ obj.id }}</td>
-            <td>{{ obj.feature_one }}</td>
-            <td>{{ obj.feature_two }}</td>
-            <td>{{ obj.feature_strat }}</td>
+            <td>{{ obj.sepal_length }}</td>
+            <td>{{ obj.sepal_width }}</td>
+            <td>{{ obj.petal_length }}</td>
+            <td>{{ obj.petal_width }}</td>
+            <td>{{ obj.flower_species }}</td>
         </tr>
         {% endfor %}
     </table>
