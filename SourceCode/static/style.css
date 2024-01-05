@@ -19,11 +19,11 @@ td {
 }
 
 tr:nth-of-type(even) {
-  background-color: deepskyblue;
+  background-color: #008dc7;
 }
 
 tr:nth-of-type(odd) {
-  background-color: cyan;
+  background-color: #07f1f1;
 }
 
 tr:hover {
@@ -39,6 +39,7 @@ div {
 form {
   display: flex;
   flex-direction: column;
+  margin-right: 10px;
 }
 
 .main-form {
