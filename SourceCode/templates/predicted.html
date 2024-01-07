@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Predicted data point{% endblock %}
+
+{% block content %}
+    <div>
+        <form action="/" method="get">
+            <input type="hidden" name="dummy" value="">
+            <button type="submit">Return home</button>
+        </form>
+        <table>
+            <tr>
+                <th>Predicted with std</th>
+                <th>Predicted without std</th>
+            </tr>
+            <tr>
+                <td>{{flower_species_std}}</td>
+                <td>{{flower_species}}</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}

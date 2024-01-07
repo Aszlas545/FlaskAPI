@@ -1,11 +1,14 @@
 {% extends "base.html" %}
+
+{% block title %}Predict data point{% endblock %}
+
 {% block content %}
     <div>
         <form action="/" method="get">
             <input type="hidden" name="dummy" value="">
             <button type="submit">Return home</button>
         </form>
-        <form action="/add" method="post">
+        <form action="/predict" method="post">
             <label for="sepal_length">sepal_length:</label><input type="text" id="sepal_length" name="sepal_length">
             <label for="sepal_width">sepal_width:</label><input type="text" id="sepal_width" name="sepal_width">
             <label for="petal_length">petal_length:</label><input type="text" id="petal_length" name="petal_length">
