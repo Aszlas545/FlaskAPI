@@ -6,15 +6,19 @@
   font-family: Arial, sans-serif;
 }
 
+body {
+  background-color: #7c7c7c;
+}
+
 th {
-  background-color: #333;
-  color: #fff;
+  background-color: #383838;
+  color: #ffffff;
   text-align: left;
   padding: 12px;
 }
 
 td {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #dad9d9;
   padding: 12px;
 }
 
@@ -27,7 +31,7 @@ tr:nth-of-type(odd) {
 }
 
 tr:hover {
-  background-color: #fff;
+  background-color: #ffffff;
 }
 
 div {
@@ -37,8 +41,6 @@ div {
 }
 
 form {
-  display: flex;
-  flex-direction: column;
   margin-right: 10px;
 }
 
@@ -53,5 +55,39 @@ label {
 }
 
 button {
+  background-color: #820bc7;
+  color: white;
+  border: 1px solid #cccccc;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
   font-size: 20px;
+}
+
+
+.container {
+  position: relative;
+  background: linear-gradient(to bottom, #007bff, #0056b3);
+  width: 530px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #cbcbcb;
+}
+
+a {
+  margin-right: 10px;
+}
+
+.a-home {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+button:hover {
+  background-color: #d209ff;
+}
+
+.other-form {
+  margin-top: 50px;
 }

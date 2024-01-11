@@ -3,11 +3,10 @@
 {% block title %}Predicted data point{% endblock %}
 
 {% block content %}
-    <div>
-        <form action="/" method="get">
-            <input type="hidden" name="dummy" value="">
-            <button type="submit">Return home</button>
-        </form>
+    <div class="container">
+        <a href="http://127.0.0.1:5000/" class="a-home">
+          <button>Return home</button>
+        </a>
         <table>
             <tr>
                 <th>Predicted with std</th>

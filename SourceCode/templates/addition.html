@@ -3,18 +3,34 @@
 {% block title %}Add data point{% endblock %}
 
 {% block content %}
-    <div>
-        <form action="/" method="get">
-            <input type="hidden" name="dummy" value="">
-            <button type="submit">Return home</button>
+    <div class="container">
+        <form class="form" action="/add" method="post">
+            <div class="form-group">
+                <label for="sepal_length">sepal_length:</label>
+                <input type="text" id="sepal_length" name="sepal_length">
+            </div>
+            <div class="form-group">
+                <label for="sepal_width">sepal_width:</label>
+                <input type="text" id="sepal_width" name="sepal_width">
+            </div>
+            <div class="form-group">
+                <label for="petal_length">petal_length:</label>
+                <input type="text" id="petal_length" name="petal_length">
+            </div>
+            <div class="form-group">
+               <label for="petal_width">petal_width:</label>
+                <input type="text" id="petal_width" name="petal_width">
+            </div>
+            <div class="form-group">
+                <label for="flower_species">flower_species:</label>
+                <input type="text" id="flower_species" name="flower_species">
+            </div>
+            <div class="form-group">
+                <button type="submit">Submit</button>
+            </div>
         </form>
-        <form action="/add" method="post">
-            <label for="sepal_length">sepal_length:</label><input type="text" id="sepal_length" name="sepal_length">
-            <label for="sepal_width">sepal_width:</label><input type="text" id="sepal_width" name="sepal_width">
-            <label for="petal_length">petal_length:</label><input type="text" id="petal_length" name="petal_length">
-            <label for="petal_width">petal_width:</label><input type="text" id="petal_width" name="petal_width">
-            <label for="flower_species">flower_species:</label><input type="text" id="flower_species" name="flower_species">
-            <button type="submit">Add</button>
-        </form>
+        <a href="http://127.0.0.1:5000/" class="a-home">
+          <button>Return home</button>
+        </a>
     </div>
 {% endblock %}

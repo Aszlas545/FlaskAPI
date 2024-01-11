@@ -4,14 +4,12 @@
 
 {% block content %}
     <div>
-        <form action="/add" method="get">
-            <input type="hidden" name="dummy" value="">
-            <button type="submit">Addition Form</button>
-        </form>
-        <form action="/predict" method="get">
-            <input type="hidden" name="dummy" value="">
-            <button type="submit">Prediction Form</button>
-        </form>
+        <a href="http://127.0.0.1:5000/add">
+          <button>Add point</button>
+        </a>
+        <a href="http://127.0.0.1:5000/predict">
+          <button>Predict point</button>
+        </a>
     </div>
     <table class="styled-table">
         <tr>
