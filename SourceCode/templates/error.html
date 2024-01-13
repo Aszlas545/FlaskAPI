@@ -7,8 +7,8 @@
         <a href="http://127.0.0.1:5000/" class="a-home">
           <button>Return home</button>
         </a>
-        <h1>Error!</h1>
-        <p>An error occurred while your request was processed</p>
+        <h1>Error {{ error_code }}!</h1>
+        <p>{{ error_name }}</p>
         <h2>Error details:</h2>
         <p>{{ error_message }}</p>
     </div>

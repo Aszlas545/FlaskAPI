@@ -1,5 +1,4 @@
-# import requests
-from flask import Flask, render_template, redirect, request, url_for, abort
+from flask import Flask, render_template, redirect, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from jsonschema import validate, ValidationError
@@ -108,10 +107,14 @@ def add_point():
                     sepal_width <= 0 or
                     petal_length <= 0 or
                     petal_width <= 0 or
-                    flower_species < 0):
+                    flower_species <= 0):
                 raise ValueError
         except ValueError:
-            return abort(400)
+            return render_template('error.html',
+                                   error_code=400,
+                                   error_name="Bad request",
+                                   error_message="All given values must be non-negative numbers "
+                                                 "and the flower_species must be an integer"), 400
         point = Iris(sepal_length=sepal_length,
                      sepal_width=sepal_width,
                      petal_length=petal_length,
@@ -129,7 +132,10 @@ def delete_point(record_id):
         delete_by_id(record_id)
         return redirect(url_for("home_page"))
     else:
-        return abort(404)
+        return render_template('error.html',
+                               error_code=404,
+                               error_name="Record not found",
+                               error_message="There is no record with given id in the database"), 404
 
 
 @app.route('/predict', methods=['POST', 'GET'])
@@ -148,11 +154,16 @@ def predict_point():
                 raise ValueError
 
         except ValueError:
-            return abort(400)
+            return render_template('error.html',
+                                   error_code=400,
+                                   error_name="Bad request",
+                                   error_message="All given values must be non-negative numbers"), 400
         try:
             flower_species = int(predict(sepal_length, sepal_width, petal_length, petal_width)[0])
         except ValueError:
             return render_template('error.html',
+                                   error_code=400,
+                                   error_name="Bad request",
                                    error_message="There must be at least 5 data points in the "
                                                  "database in order to predict a class of an Iris"), 400
 
@@ -216,7 +227,7 @@ def api_predict_point():
     except ValidationError:
         return {"Invalid data, the data point should follow the schema": iris_prediction_schema}, 400
     except ValueError:
-        return "there must be at least 5 data points in the database in order to predict a class of an Iris", 400
+        return "there must be at least 5 data points in the database in order to predict species of an Iris", 400
 
 
 with app.app_context():
