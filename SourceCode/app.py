@@ -198,7 +198,7 @@ def api_add_point():
         add_to_db(point)
         return {"Data added": point.id}, 201
     except ValidationError:
-        return {"Invalid data, the data point should follow the schema": iris_schema}, 400
+        return {"ValidationError, the data point should follow the schema": iris_schema}, 400
 
 
 @app.route('/api/data/<int:record_id>', methods=['DELETE'])
@@ -210,24 +210,30 @@ def api_delete_point(record_id):
         return {"Record with following id not found": record_id}, 404
 
 
-@app.route('/api/predictions', methods=['POST'])
+@app.route('/api/predictions', methods=['GET'])
 def api_predict_point():
-    data = request.json
     try:
-        validate(instance=data, schema=iris_prediction_schema)
+        sepal_length = float(request.args.get('sepal_length'))
+        sepal_width = float(request.args.get('sepal_width'))
+        petal_length = float(request.args.get('petal_length'))
+        petal_width = float(request.args.get('petal_width'))
 
-        sepal_length = data.get('sepal_length')
-        sepal_width = data.get('sepal_width')
-        petal_length = data.get('petal_length')
-        petal_width = data.get('petal_width')
+        # Validate input data
+        if (sepal_length is None
+                or sepal_width is None
+                or petal_length is None
+                or petal_width is None):
+            raise ValidationError
 
-        flower_species = int(predict(sepal_length, sepal_width, petal_length, petal_width)[0])
-
-        return {"predicted_without_std": flower_species}
-    except ValidationError:
-        return {"Invalid data, the data point should follow the schema": iris_prediction_schema}, 400
+    except TypeError:
+        return {"TypeError": "Not all the arguments were provided"}, 400
     except ValueError:
-        return "there must be at least 5 data points in the database in order to predict species of an Iris", 400
+        return {"ValueError": "All arguments need to be floats"}, 400
+    try:
+        flower_species = int(predict(sepal_length, sepal_width, petal_length, petal_width)[0])
+    except ValueError:
+        return "There must be at least 5 data points in the database in order to predict species of an Iris", 400
+    return {"Predicted species": flower_species}
 
 
 with app.app_context():
