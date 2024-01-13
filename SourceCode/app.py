@@ -24,17 +24,6 @@ iris_schema = {
     "required": ["sepal_length", "sepal_width", "petal_length", "petal_width", "flower_species"]
 }
 
-iris_prediction_schema = {
-    "type": "object",
-    "properties": {
-        "sepal_length": {"type": "number", "exclusiveMinimum": 0},
-        "sepal_width": {"type": "number", "exclusiveMinimum": 0},
-        "petal_length": {"type": "number", "exclusiveMinimum": 0},
-        "petal_width": {"type": "number", "exclusiveMinimum": 0},
-    },
-    "required": ["sepal_length", "sepal_width", "petal_length", "petal_width"]
-}
-
 
 class Iris(db.Model):
     __tablename__ = 'iris'
