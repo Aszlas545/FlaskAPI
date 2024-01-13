@@ -67,6 +67,7 @@ button {
 
 .container {
   position: relative;
+  display: block;
   background: linear-gradient(to bottom, #007bff, #0056b3);
   width: 530px;
   margin: auto;

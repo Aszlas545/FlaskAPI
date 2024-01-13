@@ -1,12 +1,12 @@
-import requests
+# import requests
 from flask import Flask, render_template, redirect, request, url_for, abort
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 from jsonschema import validate, ValidationError
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 
 knn = KNeighborsClassifier(n_neighbors=5)
-knn2 = KNeighborsClassifier(n_neighbors=5)
 scaler = StandardScaler()
 
 app = Flask(__name__)
@@ -59,26 +59,20 @@ def add_to_db(point):
     db.session.add(point)
     db.session.commit()
     train_model()
-    train_model_std()
 
 
 def delete_by_id(record_id):
-    point = Iris.query.filter_by(id=record_id).first()
+    point = db.session.get(Iris, record_id)
     db.session.delete(point)
     db.session.commit()
-    train_model()
-    train_model_std()
+    if db.session.scalar(db.select(func.count()).select_from(Iris)) != 0:
+        train_model()
     return point
 
 
 def predict(sepal_length, sepal_width, petal_length, petal_width):
-    sample = [[sepal_length, sepal_width, petal_length, petal_width]]
-    return knn.predict(sample)
-
-
-def predict_std(sepal_length, sepal_width, petal_length, petal_width):
     sample = scaler.transform([[sepal_length, sepal_width, petal_length, petal_width]])
-    return knn2.predict(sample)
+    return knn.predict(sample)
 
 
 def train_model():
@@ -89,20 +83,9 @@ def train_model():
              point.sepal_width]
             for point in data_points]
     target = list(db.session.scalars(db.select(Iris.flower_species)))
-    knn.fit(data, target)
-
-
-def train_model_std():
-    data_points = db.session.scalars(db.select(Iris))
-    data = [[point.sepal_length,
-             point.sepal_width,
-             point.petal_length,
-             point.sepal_width]
-            for point in data_points]
-    target = list(db.session.scalars(db.select(Iris.flower_species)))
     scaler.fit(data)
     train_data = scaler.transform(data)
-    knn2.fit(train_data, target)
+    knn.fit(train_data, target)
 
 
 @app.route('/')
@@ -164,14 +147,16 @@ def predict_point():
                     petal_width <= 0):
                 raise ValueError
 
-            flower_species = int(predict(sepal_length, sepal_width, petal_length, petal_width)[0])
-            flower_species_std = int(predict_std(sepal_length, sepal_width, petal_length, petal_width)[0])
         except ValueError:
             return abort(400)
+        try:
+            flower_species = int(predict(sepal_length, sepal_width, petal_length, petal_width)[0])
+        except ValueError:
+            return render_template('error.html',
+                                   error_message="There must be at least 5 data points in the "
+                                                 "database in order to predict a class of an Iris"), 400
 
-        return render_template('predicted.html',
-                               flower_species=flower_species,
-                               flower_species_std=flower_species_std)
+        return render_template('predicted.html', flower_species=flower_species)
     if request.method == "GET":
         return render_template('prediction.html')
 
@@ -200,7 +185,7 @@ def api_add_point():
                      petal_width=data.get('petal_width'),
                      flower_species=data.get('flower_species'))
         add_to_db(point)
-        return {"Data added": point.id}, 302
+        return {"Data added": point.id}, 201
     except ValidationError:
         return {"Invalid data, the data point should follow the schema": iris_schema}, 400
 
@@ -209,7 +194,7 @@ def api_add_point():
 def api_delete_point(record_id):
     if db.session.get(Iris, record_id) is not None:
         delete_by_id(record_id)
-        return {'Data deleted': record_id}, 302
+        return {'Data deleted': record_id}
     else:
         return {"Record with following id not found": record_id}, 404
 
@@ -226,55 +211,18 @@ def api_predict_point():
         petal_width = data.get('petal_width')
 
         flower_species = int(predict(sepal_length, sepal_width, petal_length, petal_width)[0])
-        flower_species_std = int(predict_std(sepal_length, sepal_width, petal_length, petal_width)[0])
 
-        return {"predicted_without_std": flower_species,
-                "predicted_with_std:": flower_species_std}, 302
+        return {"predicted_without_std": flower_species}
     except ValidationError:
         return {"Invalid data, the data point should follow the schema": iris_prediction_schema}, 400
-
-
-@app.route('/test_get')
-def test_get():
-    response = requests.get('http://127.0.0.1:5000/api/data')
-    return response.json()
-
-
-@app.route('/test_post')
-def test_post():
-    point = {
-        "sepal_length": 5.1,
-        "sepal_width": 3.5,
-        "petal_length": 1.4,
-        "petal_width": 0.2,
-        "flower_species": 0,
-    }
-    response = requests.post('http://127.0.0.1:5000/api/data', json=point)
-    return response.json()
-
-
-@app.route('/test_delete')
-def test_delete():
-    response = requests.delete('http://127.0.0.1:5000/api/data/222')
-    return response.json()
-
-
-@app.route('/test_predict')
-def test_predict():
-    point = {
-        "sepal_length": 5.1,
-        "sepal_width": 3.5,
-        "petal_length": 1.4,
-        "petal_width": 0.2
-    }
-    response = requests.post('http://127.0.0.1:5000/api/predictions', json=point)
-    return response.json()
+    except ValueError:
+        return "there must be at least 5 data points in the database in order to predict a class of an Iris", 400
 
 
 with app.app_context():
     db.create_all()
-    train_model()
-    train_model_std()
+    if db.session.scalar(db.select(func.count()).select_from(Iris)) != 0:
+        train_model()
 
 if __name__ == '__main__':
     app.run(debug=True)

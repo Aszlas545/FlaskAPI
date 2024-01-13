@@ -1,16 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}Predicted data point{% endblock %}
+{% block title %}Error{% endblock %}
 
 {% block content %}
     <div class="container">
         <a href="http://127.0.0.1:5000/" class="a-home">
           <button>Return home</button>
         </a>
-        <table>
-            <tr>
-                <th>Predicted class: {{ flower_species }}</th>
-            </tr>
-        </table>
+        <h1>Error!</h1>
+        <p>An error occurred while your request was processed</p>
+        <h2>Error details:</h2>
+        <p>{{ error_message }}</p>
     </div>
 {% endblock %}
