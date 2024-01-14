@@ -207,17 +207,16 @@ def api_predict_point():
         petal_length = float(request.args.get('petal_length'))
         petal_width = float(request.args.get('petal_width'))
 
-        # Validate input data
-        if (sepal_length is None
-                or sepal_width is None
-                or petal_length is None
-                or petal_width is None):
-            raise ValidationError
+        if (sepal_length <= 0 or
+                sepal_width <= 0 or
+                petal_length <= 0 or
+                petal_width <= 0):
+            raise ValueError
 
     except TypeError:
         return {"TypeError": "Not all the arguments were provided"}, 400
     except ValueError:
-        return {"ValueError": "All arguments need to be floats"}, 400
+        return {"ValueError": "All arguments need to be non-negative floats"}, 400
     try:
         flower_species = int(predict(sepal_length, sepal_width, petal_length, petal_width)[0])
     except ValueError:
