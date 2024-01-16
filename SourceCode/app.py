@@ -220,7 +220,8 @@ def api_predict_point():
     try:
         flower_species = int(predict(sepal_length, sepal_width, petal_length, petal_width)[0])
     except ValueError:
-        return "There must be at least 5 data points in the database in order to predict species of an Iris", 400
+        return {"Not enough data points":
+                "There must be at least 5 data points in the database in order to predict species of an Iris"}, 400
     return {"Predicted species": flower_species}
 
 
