@@ -92,3 +92,11 @@ button:hover {
 .other-form {
   margin-top: 50px;
 }
+
+.prediction {
+  background-color: #383838;
+  color: #ffffff;
+  text-align: left;
+  padding: 12px;
+  width: 30%;
+}

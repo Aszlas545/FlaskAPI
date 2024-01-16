@@ -96,7 +96,7 @@ def add_point():
                     sepal_width <= 0 or
                     petal_length <= 0 or
                     petal_width <= 0 or
-                    flower_species <= 0):
+                    flower_species < 0):
                 raise ValueError
         except ValueError:
             return render_template('error.html',
